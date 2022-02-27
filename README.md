@@ -27,7 +27,7 @@ Given: the user is displayed a list of all events from all cities
 When: user clicks on a drop down field for “cities” 
 Then: user will see check boxes with all cities possible to choose from
 
-####Scenario 3:
+#### Scenario 3:
 
 Given: the drop down field for “cities” was opened
 When: user clicks check box to choose the city/cities for which he wants to see events 
