@@ -2,8 +2,10 @@ import React, { Component } from 'react';
 import './App.css';
 import EventList from './EventList';
 import CitySearch from './CitySearch';
+// eslint-disable-next-line
 import { NumberOfEvents } from './NumberOfEvents';
 import { getEvents, extractLocations } from './api';
+// eslint-disable-next-line
 import NProgress from 'nprogress';
 
 class App extends Component {
