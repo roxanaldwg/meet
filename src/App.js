@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import './App.css';
 import EventList from './EventList';
 import CitySearch from './CitySearch';
-// eslint-disable-next-line
 import { NumberOfEvents } from './NumberOfEvents';
 import { getEvents, extractLocations } from './api';
 // eslint-disable-next-line
@@ -29,16 +28,23 @@ class App extends Component {
     this.mounted = false;
   }
 
-  updateEvents = (location) => {
+  updateEvents = (location, eventCount) => {
+    this.mounted = true;
     getEvents().then((events) => {
-      const locationEvents = (location === 'all') ?
-        events :
-        events.filter((event) => event.location === location);
-      this.setState({
-        events: locationEvents
-      });
+      const locationEvents =
+        location === "all" && eventCount === 0
+          ? events
+          : location !== "all" && eventCount === 0
+            ? events.filter((event) => event.location === location)
+            : events.slice(0, eventCount);
+      if (this.mounted) {
+        this.setState({
+          events: locationEvents,
+          numberOfEvents: eventCount,
+        });
+      }
     });
-  }
+  };
 
   updateNumberOfEvents = (numberOfEvents) => {
     this.setState(
@@ -54,6 +60,9 @@ class App extends Component {
       <div className="App">
         <CitySearch locations={this.state.locations} updateEvents={this.updateEvents} />
         <EventList events={this.state.events} />
+        <NumberOfEvents
+          numberOfEvents={this.state.numberOfEvents}
+          updateNumberOfEvents={this.updateNumberOfEvents} />
       </div>
     );
   }

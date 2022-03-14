@@ -1,7 +1,6 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 import CitySearch from '../CitySearch';
-
 import { mockData } from '../mock-data';
 import { extractLocations } from '../api';
 
@@ -11,11 +10,14 @@ describe('<CitySearch /> component', () => {
 
   beforeAll(() => {
     locations = extractLocations(mockData);
-    CitySearchWrapper = shallow(<CitySearch locations={locations} updateEvents={() => { }} />);
+    CitySearchWrapper = shallow(
+      <CitySearch locations={locations} updateEvents={() => { }} />
+    );
   });
 
-  test('render text input', () => {
-    expect(CitySearchWrapper.find('.city')).toHaveLength(1);
+  test('render text input correctly', () => {
+    const query = CitySearchWrapper.state("query");
+    expect(CitySearchWrapper.find(".city").prop("value")).toBe(query);
   });
 
   test('render list of suggestions', () => {
@@ -65,6 +67,13 @@ describe('<CitySearch /> component', () => {
     const suggestions = CitySearchWrapper.state('suggestions');
     CitySearchWrapper.find('.suggestions li').at(0).simulate('click');
     expect(CitySearchWrapper.state("query")).toBe(suggestions[0]);
+  });
+
+  test("show event suggestions list", () => {
+    CitySearchWrapper.setState({
+      showSuggestions: true,
+    });
+    expect(CitySearchWrapper.find(".suggestions")).toHaveLength(1);
   });
 
   test("selecting CitySearch input reveals the suggestions list", () => {
