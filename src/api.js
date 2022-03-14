@@ -61,6 +61,7 @@ const getToken = async (code) => {
   const encodeCode = encodeURIComponent(code);
   // eslint-disable-next-line
   const { access_token } = await fetch(
+    // eslint-disable-next-line
     'https://fn1vr9ifoc.execute-api.eu-central-1.amazonaws.com/dev/api/token' + '/' + encodeCode
   )
     .then((res) => {
