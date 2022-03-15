@@ -11,7 +11,7 @@ class App extends Component {
   state = {
     events: [],
     locations: [],
-    currentLocation: "all",
+    currentLocation: 'all',
     numberOfEvents: 32,
   };
 
@@ -28,23 +28,17 @@ class App extends Component {
     this.mounted = false;
   }
 
-  updateEvents = (location, eventCount) => {
-    this.mounted = true;
+  updateEvents = (location, eventCount = this.state.eventCount) => {
     getEvents().then((events) => {
-      const locationEvents =
-        location === "all" && eventCount === 0
-          ? events
-          : location !== "all" && eventCount === 0
-            ? events.filter((event) => event.location === location)
-            : events.slice(0, eventCount);
-      if (this.mounted) {
-        this.setState({
-          events: locationEvents,
-          numberOfEvents: eventCount,
-        });
-      }
+      const locationEvents = (location === "all" ? events : events.filter((event) => event.location === location));
+      locationEvents = locationEvents.slice(0, eventCount)
+      this.setState({
+        events: locationEvents,
+        numberOfEvents: eventCount,
+        activeLocation: location
+      });
     });
-  };
+  }
 
   updateNumberOfEvents = (numberOfEvents) => {
     this.setState(
@@ -56,17 +50,20 @@ class App extends Component {
   };
 
   render() {
+    const { locations, numberOfEvents, events } = this.state;
     return (
       <div className="App">
         <CitySearch
-          locations={this.state.locations}
-          numberOfEvents={numberOfEvents}
-          updateEvents={this.updateEvents} />
-        <EventList events={events} numberOfEvents={numberOfEvents} />
+          updateEvents={this.updateEvents}
+          locations={locations}
+        />
+        <EventList
+          events={events}
+          numberOfEvents={numberOfEvents} />
         <NumberOfEvents
-          updateNumberOfEvents={(number) => {
-            this.updateNumberOfEvents(number);
-          }} />
+          updateNumberOfEvents={this.updateNumberOfEvents}
+          numberOfEvents={numberOfEvents}
+        />
       </div>
     );
   }
