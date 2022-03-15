@@ -10,7 +10,7 @@ class Alert extends Component {
     return {
       color: this.color,
     };
-  }
+  };
 
   render() {
     return (
@@ -19,27 +19,21 @@ class Alert extends Component {
       </div>
     );
   }
-};
+}
 
-
-
-export class InfoAlert extends Alert {
+class InfoAlert extends Alert {
   constructor(props) {
     super(props);
     this.color = 'blue';
   }
 }
 
-export class ErrorAlert extends Alert {
+class ErrorAlert extends Alert {
   constructor(props) {
     super(props);
     this.color = 'red';
   }
 }
 
-export class WarningAlert extends Alert {
-  constructor(props) {
-    super(props);
-    this.color = 'orange';
-  }
-}
+export { InfoAlert };
+export { ErrorAlert };
