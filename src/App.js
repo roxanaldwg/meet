@@ -3,37 +3,52 @@ import './App.css';
 import EventList from './EventList';
 import CitySearch from './CitySearch';
 import { NumberOfEvents } from './NumberOfEvents';
-import { getEvents, extractLocations } from './api';
 import { OfflineAlert } from './Alert';
+import WelcomeScreen from './WelcomeScreen';
+import { getEvents, extractLocations, checkToken, getAccessToken } from
+  './api';
 // eslint-disable-next-line
 import NProgress from 'nprogress';
 
 class App extends Component {
-  state = {
-    events: [],
-    locations: [],
-    currentLocation: 'all',
-    numberOfEvents: 32,
-    offlineText: ''
-  };
+  constructor(props) {
+    super(props)
 
-  componentDidMount() {
+    this.state = {
+      events: [],
+      locations: [],
+      currentLocation: 'all',
+      numberOfEvents: 32,
+      offlineText: '',
+      showWelcomeScreen: undefined
+    }
+  }
+
+  async componentDidMount() {
     this.mounted = true;
-    getEvents().then((events) => {
-      if (this.mounted) {
-        this.setState({ events, locations: extractLocations(events) });
-      }
+    const accessToken = localStorage.getItem('access_token');
+    const isTokenValid = (await checkToken(accessToken)).error ? false :
+      true;
+    const searchParams = new URLSearchParams(window.location.search);
+    const code = searchParams.get("code");
+    this.setState({ showWelcomeScreen: !(code || isTokenValid) });
+    if ((code || isTokenValid) && this.mounted) {
+      getEvents().then((events) => {
+        if (this.mounted) {
+          this.setState({ events, locations: extractLocations(events) });
+        }
+      });
+    }
 
-      if (!navigator.onLine) {
-        this.setState({
-          offlineText: 'You are currently offline, events may not be updated.'
-        })
-      } else {
-        this.setState({
-          offlineText: ''
-        })
-      }
-    });
+    if (!navigator.onLine) {
+      this.setState({
+        offlineText: 'You are currently offline, events may not be updated.'
+      })
+    } else {
+      this.setState({
+        offlineText: ''
+      })
+    }
   }
 
   componentWillUnmount() {
@@ -63,22 +78,25 @@ class App extends Component {
 
   render() {
     const { locations, numberOfEvents, events, OfflineAlertText } = this.state;
-    return (
-      <div className="App">
-        <OfflineAlert text={OfflineAlertText} />
-        <CitySearch
-          updateEvents={this.updateEvents}
-          locations={locations}
-        />
-        <EventList
-          events={events}
-          numberOfEvents={numberOfEvents} />
-        <NumberOfEvents
-          updateNumberOfEvents={this.updateNumberOfEvents}
-          numberOfEvents={numberOfEvents}
-        />
-      </div>
-    );
+    if (this.state.showWelcomeScreen === undefined)
+      return (
+        <div className="App">
+          <OfflineAlert text={OfflineAlertText} />
+          <CitySearch
+            updateEvents={this.updateEvents}
+            locations={locations}
+          />
+          <EventList
+            events={events}
+            numberOfEvents={numberOfEvents} />
+          <NumberOfEvents
+            updateNumberOfEvents={this.updateNumberOfEvents}
+            numberOfEvents={numberOfEvents}
+          />
+          <WelcomeScreen showWelcomeScreen={this.state.showWelcomeScreen}
+            getAccessToken={() => { getAccessToken() }} />
+        </div>
+      );
   }
 }
 
