@@ -4,6 +4,7 @@ import EventList from './EventList';
 import CitySearch from './CitySearch';
 import { NumberOfEvents } from './NumberOfEvents';
 import { getEvents, extractLocations } from './api';
+import { OfflineAlert } from './Alert';
 // eslint-disable-next-line
 import NProgress from 'nprogress';
 
@@ -13,6 +14,7 @@ class App extends Component {
     locations: [],
     currentLocation: 'all',
     numberOfEvents: 32,
+    offlineText: ''
   };
 
   componentDidMount() {
@@ -20,6 +22,16 @@ class App extends Component {
     getEvents().then((events) => {
       if (this.mounted) {
         this.setState({ events, locations: extractLocations(events) });
+      }
+
+      if (!navigator.onLine) {
+        this.setState({
+          offlineText: 'You are currently offline, events may not be updated.'
+        })
+      } else {
+        this.setState({
+          offlineText: ''
+        })
       }
     });
   }
@@ -50,9 +62,10 @@ class App extends Component {
   };
 
   render() {
-    const { locations, numberOfEvents, events } = this.state;
+    const { locations, numberOfEvents, events, OfflineAlertText } = this.state;
     return (
       <div className="App">
+        <OfflineAlert text={OfflineAlertText} />
         <CitySearch
           updateEvents={this.updateEvents}
           locations={locations}
