@@ -8,6 +8,13 @@
   box-sizing: border-box;
 }
 
+h1 {
+  color: crimson;
+  font-size: xx-large;
+  font-style: italic;
+  font-weight: bolder;  
+}
+
 ul {
   padding: 0;
   list-style: none;

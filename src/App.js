@@ -77,6 +77,7 @@ class App extends Component {
     const { locations, numberOfEvents, events, OfflineAlertText } = this.state;
     return (
       <div className="App">
+        <h1>Let's Meet!</h1>
         <OfflineAlert text={OfflineAlertText} />
         <h4>Choose your nearest city</h4>
         <CitySearch
