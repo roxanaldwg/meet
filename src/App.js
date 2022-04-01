@@ -5,8 +5,7 @@ import CitySearch from './CitySearch';
 import { NumberOfEvents } from './NumberOfEvents';
 import { getEvents, extractLocations } from './api';
 import { OfflineAlert } from './Alert';
-import { ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Sector, Cell } from 'recharts';
-import { mockData } from './mock-data';
+import { ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import EventGenre from './EventGenre';
 // eslint-disable-next-line
 import NProgress from 'nprogress';
