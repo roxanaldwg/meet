@@ -24,16 +24,17 @@ class App extends Component {
     getEvents().then((events) => {
       if (this.mounted) {
         this.setState({ events, locations: extractLocations(events) });
-      }
 
-      if (!navigator.onLine) {
-        this.setState({
-          offlineText: 'You are currently offline, events may not be updated.'
-        })
-      } else {
-        this.setState({
-          offlineText: ''
-        })
+        if (!navigator.onLine) {
+          this.setState({
+            offlineText:
+              'You are currently offline, events may not be updated.',
+          });
+        } else {
+          this.setState({
+            offlineText: '',
+          });
+        }
       }
     });
   }
@@ -42,25 +43,26 @@ class App extends Component {
     this.mounted = false;
   }
 
-  updateEvents = (location, eventCount = this.state.eventCount) => {
+  updateEvents = (location, eventCount = this.state.numberOfEvents) => {
     getEvents().then((events) => {
-      let locationEvents = (location === "all" ? events : events.filter((event) => event.location === location));
-      locationEvents = locationEvents.slice(0, eventCount)
-      this.setState({
-        events: locationEvents,
-        numberOfEvents: eventCount,
-        activeLocation: location
-      });
+      let locationEvents =
+        location === "all"
+          ? events
+          : events.filter((event) => event.location === location);
+
+      locationEvents = locationEvents.slice(0, eventCount);
+      if (this.mounted) {
+        this.setState({
+          events: locationEvents,
+          numberOfEvents: eventCount,
+          currentLocation: location,
+        });
+      }
     });
-  }
+  };
 
   updateNumberOfEvents = (numberOfEvents) => {
-    this.setState(
-      {
-        numberOfEvents,
-      },
-      this.updateEvents(this.state.location, numberOfEvents)
-    );
+    this.updateEvents(this.state.currentlocation, numberOfEvents);
   };
 
   getData = () => {
@@ -80,10 +82,8 @@ class App extends Component {
         <h1>Let's Meet!</h1>
         <OfflineAlert text={OfflineAlertText} />
         <h4>Choose your nearest city</h4>
-        <CitySearch
-          updateEvents={this.updateEvents}
-          locations={locations}
-        />
+        <EventList events={events} numberOfEvents={numberOfEvents} />
+        <CitySearch updateEvents={this.updateEvents} locations={locations} />
         <NumberOfEvents
           updateNumberOfEvents={this.updateNumberOfEvents}
           numberOfEvents={numberOfEvents}

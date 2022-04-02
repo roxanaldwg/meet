@@ -69,4 +69,15 @@ describe('<App /> integration', () => {
     expect(AppWrapper.state('events')).toEqual(allEvents);
     AppWrapper.unmount();
   });
+
+  test('display number of events specified by the user', async () => {
+    const AppWrapper = mount(<App />);
+    const NumberOfEventsWrapper = AppWrapper.find(NumberOfEvents);
+    const numEventsInputEvent = { target: { value: "5" } };
+    await NumberOfEventsWrapper.instance().handleInputChanged(numEventsInputEvent);
+    expect(AppWrapper.state('events').length).toEqual(
+      parseInt(numEventsInputEvent.target.value)
+    );
+    AppWrapper.unmount();
+  });
 });

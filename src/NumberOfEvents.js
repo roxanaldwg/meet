@@ -21,7 +21,7 @@ export class NumberOfEvents extends Component {
         infoText: "",
       });
     }
-    this.props.updateNumberOfEvents(event.target.value);
+    this.props.updateNumberOfEvents(parseInt(value));
   };
 
   render() {
