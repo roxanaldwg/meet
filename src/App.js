@@ -81,14 +81,6 @@ class App extends Component {
       <div className="App">
         <h1>Let's Meet!</h1>
         <OfflineAlert text={OfflineAlertText} />
-        <h4>Choose your nearest city</h4>
-        <EventList events={events} numberOfEvents={numberOfEvents} />
-        <CitySearch updateEvents={this.updateEvents} locations={locations} />
-        <NumberOfEvents
-          updateNumberOfEvents={this.updateNumberOfEvents}
-          numberOfEvents={numberOfEvents}
-        />
-        <h4>Events in each city</h4>
 
         <div className='data-vis-wrapper'>
           <EventGenre events={events} />
@@ -108,9 +100,15 @@ class App extends Component {
             </ScatterChart>
           </ResponsiveContainer>
         </div>
-        <EventList
-          events={events}
-          numberOfEvents={numberOfEvents} />
+
+        <CitySearch updateEvents={this.updateEvents} locations={locations} />
+        <NumberOfEvents
+          updateNumberOfEvents={this.updateNumberOfEvents}
+          numberOfEvents={numberOfEvents}
+        />
+        <EventList events={events} numberOfEvents={numberOfEvents} />
+
+
 
       </div>
     );
